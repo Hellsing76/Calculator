@@ -1,55 +1,100 @@
-from tkinter import*
+from tkinter import *
 
-def iCalc( source, side) :
-    storeObj = Frame(source, borderwidth = 4, bd = 4, bg = "powder blue")
-    storeObj.pack(side=side, expand=YES, fill =BOTH)
-    return storeObj
+master = Tk()
+display = Entry(master, width=11,justify='center',bd=0,bg='darkgreen')
 
-def button(source, side, text, command=None):
-    storeObj = Button(source, text=text, command=command)
-    storeObj.pack(side=side, expand=YES, fill=BOTH)
-    return storeObj
+master.title("TI-Fong")
 
-class app (Frame) :
-    def _init_(self):
-        Frame._init_(self)
-        self.option_add('*Font', 'times new roman 22 bold')
-        self.pack(expand=YES, fill=BOTH)
-        self.master.title('Desktop Calc')
+class Calculator:
 
-        display = StringVar()
-        Entry(self, relief=GROOVE,
-                textvariable=display, justify='right', bd=30, bg="powder blue").pack(side=TOP, expand=YES,
-                        fill=BOTH)
-        for clearBut in (["CE"] , ["C"]):
-            erase = iCalc(self,TOP)
-            for ichar in clearBut:
-                button(erase, LEFT, ichar,
-                       lambda storeObj=display, q=ichar: storeObj.set(''))
-        
-        for Numbut in ("789/", "456*", "123-", "0.+"):
-            FunctionNum = iCalc(self, TOP)
-            for iEquals in NumBut:
-                button(FunctionNum, LEFT, iEquals,
-                       lambda storeObj=display, q=iEquals: storeObj.set(storeObj.get() + q))
+    def __init__(self):
+        self.var1 = ""
+        self.var2 = ""
+        self.result = 0
+        self.current = 0
+        self.operator = 0
 
-        EqualsButton = iCalc(self,BOTTOM)
-        for iEquals in "=":
-            if iEquals == '=':
-                btniEquals = button(EqualsButton, LEFT, iEquals)
-                btniEquals.bind('<ButtonRelease-1>',
-                        lambda e, s=self, storeObj=display: s.calc(storeObj), '+')
-            else:
-                btneiEquals = button(EqualsButton, LEFT, iEquals,
-                    lambda storeObj=display, s=' %s'%iEquals: storeOb.set(storeObj.get() + s))
+    def numb_butt(self, index):
+        if self.current is 0:
+            self.var1 = "{0}{1}".format(str(self.var1), str(index))
+            display.delete(0, END)
+            display.insert(0, string=self.var1)
+        else:
+            self.var2 = "{0}{1}".format(str(self.var2), str(index))
+            display.delete(0, END)
+            display.insert(0, string=self.var2)
 
-    def calc(self, display):
-        try:
-            display.set(eval(display.get()))
-        except:
-            displa.set("UNDEFINED")
-                                
-                
+    def equate(self):
+        if self.operator is 0:
+            self.result = float(self.var1) + float(self.var2)
+        elif self.operator is 1:
+            self.result = float(self.var1) - float(self.var2)
+        elif self.operator is 2:
+            self.result = float(self.var1) * float(self.var2)
+        elif self.operator is 3:
+            self.result = float(self.var1) / float(self.var2)
+        elif self.operator is 4:
+            self.result = float(self.var1) ** float(self.var2)
+        display.delete(0, END)
+        display.insert(0, string=self.result)
 
-if __name__ == '_main_':
-    app().mainloop()
+    def set_op(self, op):
+        self.operator = op
+        display.delete(0, END)
+        if self.current is 0:
+            self.current = 1
+        else:
+            self.equate()
+            self.var2 = ""
+
+    def clear(self):
+        self.__init__()
+        display.delete(0, END)
+
+calc = Calculator()
+
+b0 = Button(master, text='0', command=lambda: calc.numb_butt(0))
+b1 = Button(master, text='1', command=lambda: calc.numb_butt(1))
+b2 = Button(master, text='2', command=lambda: calc.numb_butt(2))
+b3 = Button(master, text='3', command=lambda: calc.numb_butt(3))
+b4 = Button(master, text='4', command=lambda: calc.numb_butt(4))
+b5 = Button(master, text='5', command=lambda: calc.numb_butt(5))
+b6 = Button(master, text='6', command=lambda: calc.numb_butt(6))
+b7 = Button(master, text='7', command=lambda: calc.numb_butt(7))
+b8 = Button(master, text='8', command=lambda: calc.numb_butt(8))
+b9 = Button(master, text='9', command=lambda: calc.numb_butt(9))
+b_dot = Button(master, text='', command=lambda: calc.numb_butt("."))
+
+plus = Button(master,text="+", command=lambda: calc.set_op(0))
+minus = Button(master,text="-", command=lambda: calc.set_op(1))
+times = Button(master,text="*", command=lambda: calc.set_op(2))
+Dives = Button(master,text="/", command=lambda: calc.set_op(3))
+Squared = Button(master,text="^2", command=lambda: calc.set_op(4))
+
+equals = Button(master,text="=", command=calc.equate)
+clear = Button(master,text="c", command=calc.clear)
+
+display.place(x=0, y=2)
+b7.grid(row=1, column=0)
+b8.grid(row=1, column=1)
+b9.grid(row=1,column=2)
+b4.grid(row=2,column=0)
+b5.grid(row=2,column=1)
+b6.grid(row=2,column=2)
+b1.grid(row=3,column=0)
+b2.grid(row=3,column=1)
+b3.grid(row=3,column=2)
+b0.grid(row=4,column=0)
+
+b_dot.grid(row=4,column=1)
+clear.grid(row=4,column=2)
+
+plus.grid(row=0,column=3)
+minus.grid(row=1,column=3)
+times.grid(row=2,column=3)
+Dives.grid(row=3,column=3)
+equals.grid(row=4,column=3)
+Squared.grid(row=0, column=4)
+
+master.mainloop()
+
