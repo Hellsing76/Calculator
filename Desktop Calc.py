@@ -1,12 +1,12 @@
 import Tkinter as tk
+import math
 
 
 def click(key):
     global memory
     if key == '=':
-        # avoid division by integer
-        if '/' in entry.get() and '.' not in entry.get():
-            entry.insert(tk.END, ".0")
+        if "/" in entry.get() and "." not in entry.get():
+            entry.insert(tk.END, '.0')
         # guard against the bad guys abusing eval()
         str1 = "-+0123456789."
         if entry.get()[0] not in str1:
@@ -28,7 +28,7 @@ def click(key):
         root.title('M=' + memory)
     elif key == 'M->':
         entry.insert(tk.END, memory)
-    elif key == 'neg':
+    elif key == '(-)':
         if '=' in entry.get():
             entry.delete(0, tk.END)
         try:
@@ -46,12 +46,12 @@ def click(key):
 
 
 root = tk.Tk()
-root.title("Graphing Calculator")
+root.title("Desktop Calculator")
 btn_list = [
     '7', '8', '9', '*', 'C',
-    '4', '5', '6', '/', 'M->',
-    '1', '2', '3', '-', '->M',
-    '0', '.', '=', '+', 'neg']
+    '4', '5', '6', '/', '->M',
+    '1', '2', '3', '-', 'M->',
+    '0', '.', '=', '+', '(-)']
 # create all buttons with a loop
 r = 1
 c = 0
